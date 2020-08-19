@@ -25,10 +25,4 @@ app.directive('playListSm', function(){
         scope: true,
         link: linkFn
     };
-}).directive('relatedPlayList', function () {
-    return {
-        restrict: 'E',
-        templateUrl: 'views/templates/relatedPlaylist.html',
-        scope: true
-    };
-});
+})

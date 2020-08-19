@@ -144,8 +144,19 @@ angular.module('caph.media', ['caph.ui'], ['$provide', '$compileProvider', funct
                     }, this);
 
                     this.togglePlay = function(index){
-                        var methodType = isPlaying ? 'pause' : 'play';
-                        invokeMethod(media, index, methodType);
+//                        var methodType = isPlaying ? 'paused' : 'playing';
+                        console.log(isPlaying)
+                        if(isPlaying == false) {
+                        	webapis.avplay.play();
+                        	
+                        	isPlaying = true
+                        	$scope.toggleIsPlaying(isPlaying)
+                        } else {
+                        	webapis.avplay.pause()
+                        	
+                        	isPlaying = false
+                        	$scope.toggleIsPlaying(isPlaying)
+                        }
                     };
                     this.restart = function(index){
                         setProperty(media, index, 'currentTime', 0);

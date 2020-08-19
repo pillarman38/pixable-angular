@@ -13,8 +13,8 @@ app.controller('controller', ['$scope', '$timeout', '$document', 'FocusUtil', 'F
     var vidItem = {}
     var time = 0
     var screen = {
-    		width: window.screen.width,
-    		height: window.screen.height
+    	width: window.screen.width,
+    	height: window.screen.height
     }
     var isSearching = true
     var pid = 0
@@ -37,7 +37,7 @@ console.log(document, $document)
     var lastDepth = $scope.currentDepth;
     var items = CONSTANT.ITEMS;
     $scope.dataCategory = [items, items, items, items];
-    $scope.relatedPlaylist = [items];
+
     
     $document.on('ready', function(){
         $timeout(function(){
@@ -111,16 +111,14 @@ console.log(document, $document)
                     })
 
             }
-        	
             /* Fill up the array for each list component. */
             updateCategoryListData(CONSTANT.PREPARED_DATA.COLORS, $scope.CATEGORY.COLORS, true);
-            updateCategoryListData(CONSTANT.PREPARED_DATA.ALPHABETS, $scope.CATEGORY.ALPHABETS, true)
-            updateCategoryListData(CONSTANT.PREPARED_DATA.NUMBERS, $scope.CATEGORY.NUMBERS, true);
+            
             $scope.isInitCompleted = true;  // 'Welcome' page will be disappear by this line.
             console.log(CONSTANT)
             $timeout(function () { // Set 'focus' to specific element by 'focus' controller.
                 focusController.focus($('#' + $scope.CATEGORY.COLORS + '-' + CONSTANT.PREPARED_DATA.COLORS[0].id));
-            }, CONSTANT.EFFECT_DELAY_TIME);
+            }, CONSTANT.EFFECT_DELAY_TIME); 
         }, 3000);
     });
 
@@ -136,9 +134,11 @@ console.log(document, $document)
         updateOverview();
     };
 
-    $scope.toggleIsPlaying = function(isPlaying){ // Change button shape by '$scope.isPlaying' ('Play' <-> 'Pause')
+    $scope.toggleIsPlaying = function(isPlayingbool){ 
+    	console.log(isPlayingbool)
+    	// Change button shape by '$scope.isPlaying' ('Play' <-> 'Pause')
         $scope.$applyAsync(function(){
-            $scope.isPlaying = isPlaying;
+            $scope.isPlaying = isPlayingbool;
         });
     };
     function killPid() {
@@ -166,8 +166,8 @@ console.log(document, $document)
     	  var v = n/Math.pow(10, 3); 
     	  time = v + vidItem['seekTime']
     	  percentage = Math.abs((time / vidItem['duration']) * 100)
-    	  console.log(statusBar)
-    	  statusBar.style.width = `${percentage}%`
+//    	  console.log(statusBar)
+//    	  statusBar.style.width = `${percentage}%`
     }
     function getVideo(mechanic) {
     	console.log("hi")
@@ -343,18 +343,9 @@ console.log(document, $document)
         if (item.loaded === false) {
             return;
         }
-        if(category === $scope.CATEGORY.RELATED_PLAY_LIST){
-            depth = $scope.DEPTH.PLAYER;
-            launchPlayer($scope.relatedPlaylist[$index].talk);
-        } else {
             depth = $scope.DEPTH.DETAIL;
-            $scope.relatedPlaylist = $scope.dataCategory[category];
-            $timeout(function(){
-                $('#list-related-talks').trigger('reload');
-            }, 0);
             updateOverview();
-        }
-        depth && changeDepth(depth);
+            depth && changeDepth(depth);
     };
 
     $scope.buttonFocusInDetail = function ($event, $originalEvent) {
@@ -363,8 +354,6 @@ console.log(document, $document)
 
     $scope.selectPlayButton = function(){
         changeDepth($scope.DEPTH.PLAYER);
-//        myVideoApp.launchPlayer();
-//        myVideoApp.isSearching = true
         getVideo("play")
     };
 
@@ -453,6 +442,7 @@ console.log(document, $document)
 
     // Change data on overview.
     function updateOverview() {
+    	console.log(currentItemData)
         $scope.overview = currentItemData;
         vidItem = $scope.overview
         $scope.isOverviewDark = false;
@@ -470,6 +460,7 @@ console.log(document, $document)
     };
 
     $scope.back = function(){
+    	console.log($scope.currentDepth)
         if ($scope.currentDepth === $scope.DEPTH.INDEX) {
             return;
         }
@@ -477,7 +468,6 @@ console.log(document, $document)
         var targetDepth;
         switch ($scope.currentDepth) {
             case $scope.DEPTH.DETAIL:
-                $scope.relatedPlaylist = [CONSTANT.ITEM];
                 moveContainer(null, 'move-container', 0);
                 targetDepth = $scope.DEPTH.INDEX;
                 break;
@@ -486,7 +476,7 @@ console.log(document, $document)
                 console.log('pidkill')
                 targetDepth = $scope.DEPTH.INDEX;
                 killPid()
-                
+                webapis.avplay.stop()
                 focusClass = '.btn-resume';
                 break;
             default:

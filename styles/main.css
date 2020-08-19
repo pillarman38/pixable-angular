@@ -48,11 +48,7 @@ body {
     font: 48px 'SamsungSVD_Latin Medium';
 }
 
-.font-header {
-    color: #EEE;
-    text-shadow: -1px 0 #fff, 0 1px #fff, 1px 0 #fff, 0 -1px #fff;
-    font: 60px 'SamsungSVD_Latin Medium';
-}
+
 
 .welcome {
     position: absolute;
@@ -127,9 +123,13 @@ body {
 }
 
 .overview {
-    position: relative;
-    width: 1770px;
-    margin: 166px 0 0 112px;
+    
+    width: 43%;
+    height: 100%;
+    float: right;
+    background-color: red;
+    z-index: -1;
+    
 }
 #overviewDisp {
 	color: white;
@@ -220,11 +220,10 @@ body {
 .list-area {
     width: 1920px;
     height: 250px; /*314px;*/
-    margin-bottom: 40px;
+    margin-bottom: 0px;
     -webkit-transform: translateZ(0);
     -webkit-transform: translate3d(0, 0, 0);
     opacity: 1;
-    margin-bottom: 60px;
 }
 
 .list-area.list-fadeout {
@@ -246,17 +245,16 @@ body {
     width: 60%;
     height: 1000px;
     overflow: hidden;
-    margin-left: 50px;
     margin-top: 0;
 }
 
 .list-scroll-wrapper {
-    left: 112px;
+    left: 50px;
 }
 
 .list-category {
     position: absolute;
-    top: 84px;
+    top: 80px;
     -webkit-transition: transform .5s ease-in-out;
 }
 
@@ -365,7 +363,7 @@ body {
 
 .move-container {
     position: absolute;
-    left:0;
+    left: 0;
     -webkit-transition: transform .5s ease-in-out, opacity .5s ease-in-out;
 }
 
@@ -675,6 +673,15 @@ body {
     width: 96px;
     background-color: rgba(105, 105, 105, 0.2);
 }
+.header-btns {
+    width: 30%;
+    height: 50px;
+    text-align: center;
+    background-color: rgba(105, 105, 105, 0.2);
+}
+.header-txt {
+	margin-top: 20px;
+}
 .hide {
     display: none;
 }
@@ -698,7 +705,32 @@ body {
 
 
 
+.header {
+    top: 0;
+    position: fixed;
+    height: 50px;
+    width: 100%;
+    margin-bottom: 0px;
+    background-image: radial-gradient(circle at 50% 50%, #ff822e, #dd480d);
+    transition: all .3s ease;  
 
+}
+.button {
+    display: inline-block;
+    float: left;
+    background-color: color;
+    width: 20%;
+    height: 100%;
+    top: 0;
+	  line-height: 50px;
+    text-align: center;
+    vertical-align: middle;
+    color: #fff;
+    cursor: pointer;
+    
+	border-radius: 5px;
+	box-shadow: 0 0 20px 0 rgba(0,0,0,.3);
+}
 
 .text-light {
 	background: linear-gradient(to right, #feac5e, #c779d0, #4bc0c8);
@@ -709,6 +741,9 @@ body {
 	font-size: 200px;
 	text-align: center;
 	
+}
+#title {
+	margin-top: 180px;
 }
 .welcome {
 	background: linear-gradient(to right, #feac5e, #c779d0, #4bc0c8);
