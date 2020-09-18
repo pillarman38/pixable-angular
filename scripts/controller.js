@@ -1,17 +1,20 @@
 'use strict';
 
 app.controller('controller', ['$scope', '$timeout', '$document', 'FocusUtil', 'FocusConstant', 'focusController', 'CONSTANT', function ($scope, $timeout, $document, FocusUtil, FocusConstant, focusController, CONSTANT) {
-
+console.log(angular)
     $scope.CATEGORY = CONSTANT.CATEGORY;
     $scope.DEPTH = {
         INDEX: 1,
-        DETAIL: 2,
-        PLAYER: 3,
-        SETTING: 4
+        HOMEVIDLIST: 2,
+        SELECTEDHOMEVIDFILE: 3,
+        DETAIL: 4,
+        PLAYER: 5,
+        SETTING5: 6
     };
     var pid = 0
     var vidItem = {}
     var time = 0
+    var arg = 0
     var screen = {
     	width: window.screen.width,
     	height: window.screen.height
@@ -26,19 +29,23 @@ app.controller('controller', ['$scope', '$timeout', '$document', 'FocusUtil', 'F
     var audio = 0
     var objElem = document.createElement('object');
     var percentage = 0
-    var elem = angular.element(document.querySelectorAll('statusBar'));
-    console.log(elem)// console the value of textbox
+    var statusBar = angular.element($('#spans'))
+    $scope.timer = 0
     var time = 0
-console.log(document, $document)
+console.log($scope)
+    	console.log(Rx)
+    	
     $scope.currentCategory = $scope.CATEGORY.COLORS;
     $scope.currentDepth = $scope.DEPTH.INDEX;
     $scope.isOverviewDark = true;
     $scope.showMediaController = false;
+    
     var lastDepth = $scope.currentDepth;
     var items = CONSTANT.ITEMS;
     $scope.dataCategory = [items, items, items, items];
-
-    
+    $scope.relatedPlaylist = $scope.dataCategory[1]
+    $scope.selectedFolder = $scope.dataCategory[1]
+    console.log($scope.dataCategory, items)
     $document.on('ready', function(){
         $timeout(function(){
         	var request = $.ajax({
@@ -59,8 +66,78 @@ console.log(document, $document)
         	console.log(parsedData, CONSTANT)
         	var newArr = []
         	
+        	var requestHomeVids = $.ajax({
+        	    url: "http://192.168.1.86:4012/api/mov/homevideos",
+        	    type: 'POST',
+        	    contentType: "application/json; charset=utf-8",
+        	    dataType: "json",
+        	    data: JSON.stringify({'pid': pid}),
+        	    async: false,
+        	    success: function (result) {
+        	       return result
+        	    },
+        	    error: function (error) {
+        	    	return error
+        	    }
+        	});
+        	var parsedDataHomeVids = JSON.parse(requestHomeVids.responseText)
+        	console.log(parsedDataHomeVids, CONSTANT)
+        	var newArrHV = []
+        	
+        	for(var i = 0; i < parsedDataHomeVids.length; i++) {
+        		CONSTANT['PREPARED_DATA']['HOMEVIDLIST'].push({
+            		title: parsedDataHomeVids[i]['title'],
+                    browser: 'Safari',
+                    screenRes: parsedDataHomeVids[i]['screenRes'],
+                    location: parsedDataHomeVids[i]['location'],
+                    fileformat: '.m3u8',
+                    duration: parsedDataHomeVids[i]['duration'],
+                    adult: parsedDataHomeVids[i]['adult'],
+                    backdrop_path: parsedDataHomeVids[i]['backdropPhotoUrl'],
+                    original_language: parsedDataHomeVids[i]['original_language'],
+                    original_title: parsedDataHomeVids[i]['original_title'],
+                    overview: parsedDataHomeVids[i]['overview'],
+                    popularity: parsedDataHomeVids[i]['popularity'],
+                    poster_path: parsedDataHomeVids[i]['poster_path'],
+                    release_date: parsedDataHomeVids[i]['release_date'],
+                    vote_average: parsedDataHomeVids[i]['vote_average'],
+                    vote_count: parsedDataHomeVids[i]['vote_count'],
+                    filePath: parsedDataHomeVids[i]['filePath'],
+                    
+                    fileName: parsedDataHomeVids[i]['fileName'],
+                    folders: parsedDataHomeVids[i]['folders'],
+                    photoUrl: parsedDataHomeVids[i]['photoUrl'],
+                    channels: parsedDataHomeVids[i]['channels'],
+                    resolution: parsedDataHomeVids[i]['resolution'],
+                    videoFormat: parsedDataHomeVids[i]['videoFormat'],
+                    screenRes: parsedDataHomeVids[i]['screenRes'],
+                    pixFmt: parsedDataHomeVids[i]['pixFmt'],
+                    color_range: parsedDataHomeVids[i]['color_range'],
+                    color_space: parsedDataHomeVids[i]['color_space'],
+                    color_transfer: parsedDataHomeVids[i]['color_transfer'],
+                    seekTime: parsedDataHomeVids[i]['seekTime'],
+                    audio: parsedDataHomeVids[i]['audio'],
+                    audioSelect: parsedDataHomeVids[i]['audioSelect'],
+                    subtitleSelect: parsedDataHomeVids[i]['subtitleSelect'],
+                    subtitles: parsedDataHomeVids[i]['subtitles'],
+                    pid: parsedDataHomeVids[i]['pid'],
+                    hdrEnabled: parsedDataHomeVids[i]['seekTime'],
+           
+                    
+                    id: 'color_' + i,
+        		                
+                        
+                        photo_urls: [
+                            {
+                                size: '240x180',
+                                title: parsedDataHomeVids[i]['title'],
+                                url: parsedDataHomeVids[i]['backdropPhotoUrl']
+                            }
+                        ]            
+                    })
+            }
+        	
         	for(var i = 0; i < parsedData.length; i++) {
-            	
         		CONSTANT['PREPARED_DATA']['COLORS'].push({
             		title: parsedData[i]['title'],
                     browser: 'Safari',
@@ -113,6 +190,7 @@ console.log(document, $document)
             }
             /* Fill up the array for each list component. */
             updateCategoryListData(CONSTANT.PREPARED_DATA.COLORS, $scope.CATEGORY.COLORS, true);
+            updateCategoryListData(CONSTANT.PREPARED_DATA.HOMEVIDLIST, $scope.CATEGORY.HOMEVIDLIST, true);
             
             $scope.isInitCompleted = true;  // 'Welcome' page will be disappear by this line.
             console.log(CONSTANT)
@@ -127,19 +205,42 @@ console.log(document, $document)
 
     var isScrolling = false;
     $scope.onScrollStart = function () {
-        isScrolling = true;
+//        isScrolling = true;
     };
     $scope.onScrollFinish = function () {
-        isScrolling = false;
+//        isScrolling = false;
         updateOverview();
     };
 
     $scope.toggleIsPlaying = function(isPlayingbool){ 
     	console.log(isPlayingbool)
-    	// Change button shape by '$scope.isPlaying' ('Play' <-> 'Pause')
         $scope.$applyAsync(function(){
             $scope.isPlaying = isPlayingbool;
         });
+    };
+    $scope.onTimeUpdate = function() {
+    	
+    }
+    $scope.homeVidsDepth = function() {
+    	$scope.relatedPlaylist = CONSTANT['PREPARED_DATA']['HOMEVIDLIST'];
+    	changeDepth($scope.DEPTH.HOMEVIDLIST)
+    	console.log($scope.currentDepth)
+    	console.log($scope)
+    };
+    $scope.moviesDepth = function() {
+    	changeDepth($scope.DEPTH.INDEX)
+    	console.log($scope.currentDepth)
+    	console.log(CONSTANT.PREPARED_DATA.COLORS, $scope.CATEGORY.COLORS)
+    };
+    $scope.toSelectedFolder = function($event, listCategory, item, $index) {
+    	console.log($event, listCategory, item, $index)
+    	CONSTANT['PREPARED_DATA']['SELECTEDHOMEVIDFILE'] = CONSTANT['PREPARED_DATA']['HOMEVIDLIST'][$index]['folders'][0]['files']
+        $scope.selectedFolder = CONSTANT['PREPARED_DATA']['SELECTEDHOMEVIDFILE']
+    	updateCategoryListData(CONSTANT.PREPARED_DATA.SELECTEDHOMEVIDFILE, $scope.CATEGORY.SELECTEDHOMEVIDFILE, true);
+    	
+    	console.log(CONSTANT['PREPARED_DATA']['SELECTEDHOMEVIDFILE'], $scope.selectedFolder)
+    	changeDepth($scope.DEPTH.SELECTEDHOMEVIDFILE)
+    	console.log($scope.currentDepth)
     };
     function killPid() {
     	var request = $.ajax({
@@ -156,8 +257,8 @@ console.log(document, $document)
     	    	return error
     	    }
     	});
-    	var parsedData = JSON.parse(request.responseText)
-    	console.log(parsedData, CONSTANT)
+//    	var parsedData = JSON.parse(request.responseText)
+//    	console.log(parsedData, CONSTANT)
     	
     }
     function timeBarUpdater(currentTime) {
@@ -166,13 +267,16 @@ console.log(document, $document)
     	  var v = n/Math.pow(10, 3); 
     	  time = v + vidItem['seekTime']
     	  percentage = Math.abs((time / vidItem['duration']) * 100)
-//    	  console.log(statusBar)
-//    	  statusBar.style.width = `${percentage}%`
+    	  console.log(percentage)
+    	  $scope.timer = percentage
+    	  $scope.$apply();
     }
+    
     function getVideo(mechanic) {
     	console.log("hi")
     	delete vidItem['id']
     	delete vidItem['photo_urls']
+    	console.log(screen)
     	vidItem['screenRes'] = `${screen['width']}x${screen['height']}`
 
     	console.log(vidItem['seekTime'], time)
@@ -319,7 +423,30 @@ console.log(document, $document)
     
     // The callback function which is called when each list component get the 'focus'.
     $scope.focus = function ($event, category, data, $index) {
+    	console.log("hellaw", $event, category, data, $index)
+    	if ($scope.currentDepth === $scope.DEPTH.HOMEVIDLIST) {
+            var scrollCount = category;
+            // Translate each list component to up or down.
+            moveContainer(category, 'list-category', -CONSTANT.SCROLL_HEIGHT_OF_INDEX * scrollCount);
+            if (!data || !data.item || data.item.loaded === false) {
+                return;
+            }
+            currentItemData = data.item;
+            isScrolling === false && updateOverview();
+            lastFocusedGroup = FocusUtil.getData($event.currentTarget).group;
+        }
         if ($scope.currentDepth === $scope.DEPTH.INDEX) {
+            var scrollCount = category;
+            // Translate each list component to up or down.
+            moveContainer(category, 'list-category', -CONSTANT.SCROLL_HEIGHT_OF_INDEX * scrollCount);
+            if (!data || !data.item || data.item.loaded === false) {
+                return;
+            }
+            currentItemData = data.item;
+            isScrolling === false && updateOverview();
+            lastFocusedGroup = FocusUtil.getData($event.currentTarget).group;
+        }
+        if ($scope.currentDepth === $scope.DEPTH.SELECTEDHOMEVIDFILE) {
             var scrollCount = category;
             // Translate each list component to up or down.
             moveContainer(category, 'list-category', -CONSTANT.SCROLL_HEIGHT_OF_INDEX * scrollCount);
@@ -340,12 +467,22 @@ console.log(document, $document)
     // The callback function which is called when user select one item of the list component.
     $scope.selected = function ($event, category, item, $index) {
         var depth;
+        console.log($event, category, item, $index)
         if (item.loaded === false) {
             return;
         }
+        if(category === $scope.CATEGORY.RELATED_PLAY_LIST){
+            depth = $scope.DEPTH.PLAYER;
+            launchPlayer($scope.relatedPlaylist[$index].talk);
+        } else {
             depth = $scope.DEPTH.DETAIL;
+            $scope.relatedPlaylist = $scope.dataCategory[category];
+            $timeout(function(){
+                $('#list-related-talks').trigger('reload');
+            }, 0);
             updateOverview();
-            depth && changeDepth(depth);
+        }
+        depth && changeDepth(depth);
     };
 
     $scope.buttonFocusInDetail = function ($event, $originalEvent) {
@@ -375,6 +512,7 @@ console.log(document, $document)
     });
 
     var getPlayerControls = function(){
+    	console.log("hi")
         return {
             play: function(){
                 $timeout(function(){
@@ -422,6 +560,7 @@ console.log(document, $document)
     // 'Changing depth' means the scene is changed.
     var changeDepth = function(depth, callback) {
         lastDepth = $scope.currentDepth;
+        console.log(lastDepth)
         $scope.currentDepth = depth;
         $timeout(function () {
             focusController.setDepth(depth);
@@ -434,10 +573,11 @@ console.log(document, $document)
 
     // Update and reload data for each list component.
     function updateCategoryListData(response, category, reload) {
+    	console.log(response, category, reload)
         $scope.dataCategory[category] = response;
         $timeout(function(){
             reload && $('#list-' + category).trigger('reload');
-        }, 0);
+        });
     };
 
     // Change data on overview.
@@ -467,14 +607,18 @@ console.log(document, $document)
         var focusClass;
         var targetDepth;
         switch ($scope.currentDepth) {
+//        	case $scope.DEPTH.HOMEVIDLIST:
+//        		console.lo("why")
+//        		targetDepth = lastDepth
             case $scope.DEPTH.DETAIL:
+            	$scope.relatedPlaylist = [CONSTANT.ITEM];
                 moveContainer(null, 'move-container', 0);
                 targetDepth = $scope.DEPTH.INDEX;
                 break;
             case $scope.DEPTH.PLAYER:
                 getPlayerControls().pause();
                 console.log('pidkill')
-                targetDepth = $scope.DEPTH.INDEX;
+                targetDepth = lastDepth
                 killPid()
                 webapis.avplay.stop()
                 focusClass = '.btn-resume';

@@ -1,10 +1,10 @@
 
 <div id="move-container" class="move-container" ng-class="{'opacity-dark':isOverviewDark,'opacity-light':!isOverviewDark}">
     <div class="header" ng-hide="currentDepth === DEPTH.PLAYER">
-    	<div focusable="{depth: DEPTH.INDEX}" class="btn btn-gap header-btns" ng-show="currentDepth === DEPTH.INDEX" on-focused="buttonFocusInDetail($event, $originalEvent)" on-selected="setting.show=true">
+    	<div focusable="{depth: DEPTH.INDEX}" class="btn btn-gap header-btns" ng-show="currentDepth === DEPTH.INDEX || currentDepth === DEPTH.HOMEVIDLIST" on-focused="buttonFocusInDetail($event, $originalEvent)" on-selected="moviesDepth()">
             <p class="header-txt">Movies</p>
         </div>
-        <div focusable="{depth: DEPTH.INDEX}" class="btn btn-gap header-btns" ng-show="currentDepth === DEPTH.INDEX" on-focused="buttonFocusInDetail($event, $originalEvent)" on-selected="setting.show=true">
+        <div focusable="{depth: DEPTH.INDEX}" class="btn btn-gap header-btns" ng-show="currentDepth === DEPTH.INDEX || currentDepth === DEPTH.HOMEVIDLIST" on-focused="buttonFocusInDetail($event, $originalEvent)" on-selected="homeVidsDepth()">
             <p class="header-txt">Home Videos</p>
         </div>
     </div>
@@ -20,11 +20,6 @@
             <div class="btn-icon icon-caph icon-caph-return"></div>
         </div>
     </div>
-    <!-- OVERVIEW -->
-    
-    
-    <!-- page: INDEX (OVERVIEW) -->
-    
 
     <!-- page: TALK (OVERVIEW) -->
     <div class="btn-wrapper" ng-show="currentDepth === DEPTH.DETAIL">
@@ -32,24 +27,34 @@
             <div class="btn-icon icon-caph icon-caph-play"></div>
         </div>
     </div>
-    <!-- page: TALK (LIST) -->
+    
+	    <div class="related-play-list">
+	        <related-play-list id="{{CATEGORY.HOMEVIDLIST}}" ng-show="currentDepth === DEPTH.HOMEVIDLIST" ng-hide="currentDepth === DEPTH.DETAIL || currentDepth === DEPTH.PLAYER || currentDepth === DEPTH.INDEX || currentDepth === DEPTH.SELECTEDHOMEVIDFILE" title="Related talks"></related-play-list>
+	    </div>
+		<div class="selected-home-video-folder">
+	        <selected-home-video-folder id="{{CATEGORY.SELECTEDHOMEVIDFILE}}" ng-show="currentDepth === DEPTH.SELECTEDHOMEVIDFILE" ng-hide="currentDepth === DEPTH.DETAIL || currentDepth === DEPTH.PLAYER || currentDepth === DEPTH.INDEX || currentDepth === DEPTH.HOMEVIDLIST" title="Related talks"></selected-home-video-folder>
+	    </div>
 </div>
 
 <div class="overview" ng-hide="currentDepth === DEPTH.PLAYER">
-        
 	    <div id="title">
-	        <p>{{overview.title}} {{overview.audio[0]['codec_name']}}</p>
+	        <p>{{overview.title}}</p>
+	    </div>
+	    <div id="plot">
+	        <p>{{overview.overview}}</p>
 	    </div>
         <div ng-if="overview.resolution == '3840x2160'">
-        	<img src="../images/4k.png"/>
+        	<img src="../images/4k.png" width="300" height="100"/>
         </div>
         <div ng-if="overview.audio[0]['codec_name'] == 'truehd'">
-        	<img src="../images/atmos.png"/>
+        	<img src="../images/atmos.png" width="100" height="100"/>
         </div>
     </div>
 <!-- page: INDEX (LIST) -->
-<div class="list-wrapper page" ng-class="{'page-fade-in': currentDepth === DEPTH.INDEX}" ng-hide="currentDepth === DEPTH.DETAIL || currentDepth === DEPTH.PLAYER">
+<div class="list-wrapper page" ng-class="{'page-fade-in': currentDepth === DEPTH.INDEX}">
     <div id="list-category" class="list-category">
-        <play-list id="{{CATEGORY.COLORS}}"></play-list>
-    </div>
+        <play-list id="{{CATEGORY.COLORS}}" ng-hide="currentDepth === DEPTH.SELECTEDHOMEVIDFILE || currentDepth === DEPTH.DETAIL || currentDepth === DEPTH.PLAYER || currentDepth === DEPTH.HOMEVIDLIST"></play-list>
+      </div>
 </div>
+
+<!-- page: Home Videos -->

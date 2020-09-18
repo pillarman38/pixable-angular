@@ -1,9 +1,19 @@
-angular.module('caph.media', ['caph.ui'], ['$provide', '$compileProvider', function($provide, $compileProvider) {
+angular.module('caph.media', ['caph.ui', 'rx'], ['$provide', '$compileProvider', function($provide, $compileProvider) {
     $compileProvider.directive({
         caphMedia: ['$parse', '$document', function($parse, $document) {
-            var CONSTANT = {
-                FORWARD_INTERVAL : 15
-            };
+//            var CONSTANT = {
+//                FORWARD_INTERVAL : 15
+//            };
+        	
+//        	var arrg = angular.element($("#spans"))
+//        	arrg.css({"height": "100%", "width": arg + "%"})
+//        	
+//        	console.log(arg)
+//            function timeUpdate() {
+//            	console.log()
+//            }
+        	
+        	
             function invokeMethod(media, index, method, param) {
                 if (angular.isNumber(index)) {
                     media[index][method].apply(media[index], param);
@@ -13,7 +23,6 @@ angular.module('caph.media', ['caph.ui'], ['$provide', '$compileProvider', funct
                     });
                 }
             }
-            
             
             function setProperty(media, index, property, value) {
                 if (angular.isNumber(index)) {
@@ -87,7 +96,9 @@ angular.module('caph.media', ['caph.ui'], ['$provide', '$compileProvider', funct
                             this.subTitle(false);
                         }
                     }.bind(this));
-
+                    var subscription = undefined
+                	
+                	
                     function doFullScreen(callback) {
                         if (isFullScreenEnabled) {
                             callback($element[0]);
@@ -144,7 +155,7 @@ angular.module('caph.media', ['caph.ui'], ['$provide', '$compileProvider', funct
                     }, this);
 
                     this.togglePlay = function(index){
-//                        var methodType = isPlaying ? 'paused' : 'playing';
+                    	$(".play-button").toggleClass("paused");
                         console.log(isPlaying)
                         if(isPlaying == false) {
                         	webapis.avplay.play();
@@ -241,6 +252,7 @@ angular.module('caph.media', ['caph.ui'], ['$provide', '$compileProvider', funct
                 require: '^caphMedia',
                 transclude: true,
                 link: function($scope, $element, $attrs, controller, $transclude) {
+                	
                     $scope.controls = controller;
                     $transclude(function(clone) {
                         $element.append(clone);

@@ -14,16 +14,18 @@
 
 	<!--Include js file for Touch Event -->
 	<script type="text/javascript" src="lib/hammer.min.js"></script>
-   
-
+    
     <!-- Include js file for app -->
     <script type="text/javascript" src="scripts/app.js"></script>
     <script type="text/javascript" src="scripts/controller.js"></script>
     <script type="text/javascript" src="scripts/directives/list.js"></script>
     <script type="text/javascript" src="scripts/directives/caphMedia.js"></script>
     <script type="text/javascript" src="scripts/utils/constant.js"></script>
-
-
+    
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.19/angular.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/rxjs/4.0.7/rx.all.js"></script>
+    <script src="lib/rx.angular.js/rx.angular.js"></script>
+    <script src="lib/rx.angular.js/rx.angular.min.js"></script>
 
 </head>
 <body ng-controller="controller">
@@ -44,6 +46,10 @@
         <!-- Put your sub-title file address into 'src' property in 'track' tag. -->
     </video>
     <caph-media-controls class="controls-bar" ng-class="{'fade-out': !showMediaController}" ng-mouseover="setMediaControllerTimer()">
+        <div id="custom-seekbar" #customSeekBar (click)="seekBarClick($event)">
+                <time-bar></time-bar>
+                <span id="spansBuffered" #spansBuffered></span>
+            </div>
         <div class="opacity-panel">
             <div class="operations">
                 <div focusable="{depth: DEPTH.PLAYER, name: 'btnPlayerRestart'}" class="btn-player" on-selected="controls.restart()">
@@ -53,7 +59,16 @@
                     <div class="btn-icon-player icon-caph icon-caph-rewind"></div>
                 </div>
                 <div focusable="{depth: DEPTH.PLAYER, name: 'btnPlayerPlay', initialFocus: true}" class="btn-player" on-selected="controls.togglePlay()">
-                    <div class="btn-icon-player icon-caph" ng-class="{'icon-caph-pause': isPlaying, 'icon-caph-play': !isPlaying}"></div>
+                    <div class="btn-icon-player icon-caph" ng-class="{'icon-caph-pause': isPlaying, 'icon-caph-play': !isPlaying}">
+                    
+                    <div class="play-button" href="#">
+					  <div class="left"></div>
+					  <div class="right"></div>
+					  <div class="triangle-1"></div>
+					  <div class="triangle-2"></div>
+					</div>
+                    
+                    </div>
                 </div>
                 <div focusable="{depth: DEPTH.PLAYER, name: 'btnForward'}" class="btn-player" on-selected="controls.forward()">
                     <div class="btn-icon-player icon-caph icon-caph-forward"></div>

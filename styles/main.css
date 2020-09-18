@@ -1,3 +1,78 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto:300");
+
+.play-button {
+  height: 30px;
+  width: 30px;
+  display: block;
+  margin: 0px auto;
+  overflow: hidden;
+  position: relative;
+}
+.left {
+  height: 100%;
+  float: left;
+  background-color: #fff;
+  width: 36%;
+  -webkit-transition: all 0.25s ease;
+  transition: all 0.25s ease;
+  overflow: hidden;
+}
+.triangle-1 {
+  -webkit-transform: translate(0, -100%);
+          transform: translate(0, -100%);
+}
+.triangle-2 {
+  -webkit-transform: translate(0, 100%);
+          transform: translate(0, 100%);
+}
+.triangle-1,
+.triangle-2 {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: transparent;
+  width: 0;
+  height: 0;
+ 
+  border-top: 15px solid transparent;
+  border-bottom: 15px solid transparent;
+  -webkit-transition: -webkit-transform 0.25s ease;
+  transition: -webkit-transform 0.25s ease;
+  transition: transform 0.25s ease;
+  transition: transform 0.25s ease, -webkit-transform 0.25s ease;
+}
+.right {
+  height: 100%;
+  float: right;
+  width: 36%;
+  
+  background-color: #fff;
+  -webkit-transition: all 0.25s ease;
+  transition: all 0.25s ease;
+}
+.paused .left {
+  width: 50%;
+}
+.paused .right {
+  width: 50%;
+}
+.paused .triangle-1 {
+  -webkit-transform: translate(0, -50%);
+          transform: translate(0, -50%);
+}
+.paused .triangle-2 {
+  -webkit-transform: translate(0, 50%);
+          transform: translate(0, 50%);
+}
+
+
+
+
+
+
+
+
+
 
 @font-face {
     font-family: "SamsungSVD_Latin Light";
@@ -123,13 +198,16 @@ body {
 }
 
 .overview {
-    
-    width: 43%;
-    height: 100%;
-    float: right;
-    background-color: red;
-    z-index: -1;
-    
+	background: rgba(100, 98, 98, 0.5); 
+	height: 100%;
+	width: 40%;
+	padding: 20px;
+	float: right;  
+}
+#plot{
+	overflow: hidden;
+	height: 400px;
+	color: white;
 }
 #overviewDisp {
 	color: white;
@@ -357,10 +435,16 @@ body {
     position: absolute;
     overflow: hidden;
     width: 1920px;
-    height: 498px;
-    top: 700px;
+    height: 1000px;
+    top: 25px;
 }
-
+.selected-home-video-folder {
+	position: absolute;
+    overflow: hidden;
+    width: 1920px;
+    height: 1000px;
+    top: 25px;
+}
 .move-container {
     position: absolute;
     left: 0;
@@ -392,7 +476,6 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-
     z-index: 9;
     background-color: black;
     overflow: hidden;
@@ -629,7 +712,7 @@ body {
     width: 54px;
     height: 54px;
     opacity: 0.8;
-    background-image: url("../images/icon_sprite.png");
+    
 }
 .btn-icon {
     position: absolute;
@@ -702,8 +785,15 @@ body {
   background-color: rgba(255, 165, 0, .8);
   transition-duration: 0.2s
 }
-
-
+#timeBar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  height: 7px;
+  background-color: rgba(255, 165, 0, .8);
+  transition-duration: 0.2s
+}
 
 .header {
     top: 0;
@@ -743,7 +833,8 @@ body {
 	
 }
 #title {
-	margin-top: 180px;
+	color: white;
+	margin-top: 50px;
 }
 .welcome {
 	background: linear-gradient(to right, #feac5e, #c779d0, #4bc0c8);
@@ -760,3 +851,7 @@ body {
 	color: white;
 }
 }
+
+
+
+
