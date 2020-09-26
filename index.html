@@ -53,10 +53,17 @@
         <div class="opacity-panel">
             <div class="operations">
                 <div focusable="{depth: DEPTH.PLAYER, name: 'btnPlayerRestart'}" class="btn-player" on-selected="controls.restart()">
-                    <div class="btn-icon-player icon-caph icon-caph-prev"></div>
+                    <div class="btn-icon-player icon-caph icon-caph-prev">
+                    <div class="rewindTriangle"></div>
+                    <div class="rewindTriangle"></div>
+                    <div class="rewindTriangle"></div>
+                    </div>
                 </div>
                 <div focusable="{depth: DEPTH.PLAYER, name: 'btnPlayerRewind'}" class="btn-player" on-selected="controls.rewind()">
-                    <div class="btn-icon-player icon-caph icon-caph-rewind"></div>
+                    <div class="btn-icon-player icon-caph icon-caph-rewind">
+                    <div class="rewindTriangle"></div>
+                    <div class="rewindTriangle"></div>
+                    </div>
                 </div>
                 <div focusable="{depth: DEPTH.PLAYER, name: 'btnPlayerPlay', initialFocus: true}" class="btn-player" on-selected="controls.togglePlay()">
                     <div class="btn-icon-player icon-caph" ng-class="{'icon-caph-pause': isPlaying, 'icon-caph-play': !isPlaying}">
@@ -71,10 +78,17 @@
                     </div>
                 </div>
                 <div focusable="{depth: DEPTH.PLAYER, name: 'btnForward'}" class="btn-player" on-selected="controls.forward()">
-                    <div class="btn-icon-player icon-caph icon-caph-forward"></div>
+                    <div class="btn-icon-player icon-caph icon-caph-forward">
+                    <div class="forwardTriangle"></div>
+                    <div class="forwardTriangle"></div>
+                    </div>
                 </div>
                 <div focusable="{depth: DEPTH.PLAYER, name: 'btnPlayerNext'}" class="btn-player" on-selected="controls.next()">
-                    <div class="btn-icon-player icon-caph icon-caph-next"></div>
+                    <div class="btn-icon-player icon-caph icon-caph-next">
+                    <div class="forwardTriangle"></div>
+                    <div class="forwardTriangle"></div>
+                    <div class="forwardTriangle"></div>
+                    </div>
                 </div>
             </div>
         </div>

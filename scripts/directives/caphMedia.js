@@ -1,9 +1,9 @@
 angular.module('caph.media', ['caph.ui', 'rx'], ['$provide', '$compileProvider', function($provide, $compileProvider) {
     $compileProvider.directive({
         caphMedia: ['$parse', '$document', function($parse, $document) {
-//            var CONSTANT = {
-//                FORWARD_INTERVAL : 15
-//            };
+            var CONSTANT = {
+                FORWARD_INTERVAL : 15
+            };
         	
 //        	var arrg = angular.element($("#spans"))
 //        	arrg.css({"height": "100%", "width": arg + "%"})
@@ -182,13 +182,8 @@ angular.module('caph.media', ['caph.ui', 'rx'], ['$provide', '$compileProvider',
                         }
                     };
                     this.forward = function(index){
-                        if (angular.isNumber(index)) {
-                            setProperty(media, index, 'currentTime', media[index].currentTime + CONSTANT.FORWARD_INTERVAL);
-                        } else {
-                            media.each(function(i) {
-                                setProperty(media, i, 'currentTime', media[i].currentTime + CONSTANT.FORWARD_INTERVAL);
-                            });
-                        }
+                    	console.log($scope['$parent'])
+                    	$scope.getVideo("forward")
                     };
                     this.next = function(index){
                         if (angular.isNumber(index)) {

@@ -1,8 +1,7 @@
-@import url("https://fonts.googleapis.com/css?family=Roboto:300");
 
 .play-button {
-  height: 30px;
-  width: 30px;
+  height: 50px;
+  width: 50px;
   display: block;
   margin: 0px auto;
   overflow: hidden;
@@ -17,29 +16,10 @@
   transition: all 0.25s ease;
   overflow: hidden;
 }
+
+
 .triangle-1 {
-  -webkit-transform: translate(0, -100%);
-          transform: translate(0, -100%);
-}
-.triangle-2 {
-  -webkit-transform: translate(0, 100%);
-          transform: translate(0, 100%);
-}
-.triangle-1,
-.triangle-2 {
-  position: absolute;
-  top: 0;
-  right: 0;
-  background-color: transparent;
-  width: 0;
-  height: 0;
- 
-  border-top: 15px solid transparent;
-  border-bottom: 15px solid transparent;
-  -webkit-transition: -webkit-transform 0.25s ease;
-  transition: -webkit-transform 0.25s ease;
-  transition: transform 0.25s ease;
-  transition: transform 0.25s ease, -webkit-transform 0.25s ease;
+  
 }
 .right {
   height: 100%;
@@ -51,26 +31,42 @@
   transition: all 0.25s ease;
 }
 .paused .left {
-  width: 50%;
+width: 0%;
+  -webkit-transition: -webkit-transform 0.25s ease;
+  transition: -webkit-transform 0.25s ease;
 }
 .paused .right {
-  width: 50%;
+	background-color: #1C1CD8;
+	  width: 0;
+      height: 0;
+      border-top: 25px solid transparent;
+      border-left: 25px solid red;
+      border-right: 25px solid transparent;
+      border-bottom: 25px solid transparent;
+  -webkit-transition: -webkit-transform 0.25s ease;
+  transition: -webkit-transform 0.25s ease;
+
 }
-.paused .triangle-1 {
-  -webkit-transform: translate(0, -50%);
-          transform: translate(0, -50%);
+
+.forwardTriangle {
+	display: inline;
+  float: left;
+  width: 0;
+    height: 0;
+    border-top: 25px solid transparent;
+    border-left: 25px solid red;
+    border-bottom: 25px solid transparent;
 }
-.paused .triangle-2 {
-  -webkit-transform: translate(0, 50%);
-          transform: translate(0, 50%);
+
+.rewindTriangle{
+	display: inline;
+	float: right;
+	width: 0;
+    height: 0;
+    border-top: 25px solid transparent;
+    border-right: 25px solid red;
+    border-bottom: 25px solid transparent;
 }
-
-
-
-
-
-
-
 
 
 
@@ -709,8 +705,8 @@ body {
 }
 
 .icon-caph {
-    width: 54px;
-    height: 54px;
+    width: 100px;
+    height: 100px;
     opacity: 0.8;
     
 }

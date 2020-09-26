@@ -32,6 +32,7 @@ console.log(angular)
     var statusBar = angular.element($('#spans'))
     $scope.timer = 0
     var time = 0
+    var homeVideos = false
 console.log($scope)
     	console.log(Rx)
     	
@@ -222,6 +223,7 @@ console.log($scope)
     	
     }
     $scope.homeVidsDepth = function() {
+    	homeVideos = true
     	$scope.relatedPlaylist = CONSTANT['PREPARED_DATA']['HOMEVIDLIST'];
     	changeDepth($scope.DEPTH.HOMEVIDLIST)
     	console.log($scope.currentDepth)
@@ -269,17 +271,17 @@ console.log($scope)
     	  percentage = Math.abs((time / vidItem['duration']) * 100)
     	  console.log(percentage)
     	  $scope.timer = percentage
-    	  $scope.$apply();
+//    	  $scope.$apply();
     }
     
-    function getVideo(mechanic) {
+    $scope.getVideo = function(mechanic) {
     	console.log("hi")
     	delete vidItem['id']
     	delete vidItem['photo_urls']
     	console.log(screen)
     	vidItem['screenRes'] = `${screen['width']}x${screen['height']}`
-
-    	console.log(vidItem['seekTime'], time)
+    
+    	console.log(mechanic)
     	switch(mechanic) {
     		case "forward": vidItem['seekTime'] += 15
     			timeBarUpdater(vidItem['seekTime'])
@@ -491,7 +493,7 @@ console.log($scope)
 
     $scope.selectPlayButton = function(){
         changeDepth($scope.DEPTH.PLAYER);
-        getVideo("play")
+        $scope.getVideo("play")
     };
 
     focusController.addBeforeKeydownHandler(function(context){
@@ -615,10 +617,27 @@ console.log($scope)
                 moveContainer(null, 'move-container', 0);
                 targetDepth = $scope.DEPTH.INDEX;
                 break;
+//            case ($scope.DEPTH.PLAYER && homeVideos == true):
+//                getPlayerControls().pause();
+//                console.log('pidkill')
+//                targetDepth = $scope.DEPTH.HOMEVIDLIST
+//                killPid()
+//                webapis.avplay.stop()
+//                focusClass = '.btn-resume';
+//                break;
             case $scope.DEPTH.PLAYER:
                 getPlayerControls().pause();
                 console.log('pidkill')
-                targetDepth = lastDepth
+                if(lastDepth == $scope.DEPTH.PLAYER && homeVideos == true) {
+                	targetDepth = $scope.DEPTH.SELECTEDHOMEVIDFILE
+                }
+                if(lastDepth == $scope.DEPTH.SELECTEDHOMEVIDFILE && homeVideos == true) {
+                	targetDepth = $scope.DEPTH.HOMEVIDLIST
+                }
+                if(lastDepth == $scope.DEPTH.PLAYER && homeVideos == false){
+                	targetDepth = $scope.DEPTH.INDEX
+                }
+                
                 killPid()
                 webapis.avplay.stop()
                 focusClass = '.btn-resume';
