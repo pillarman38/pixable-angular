@@ -46,4 +46,11 @@ app.directive('playList', function(){
 	            }, true);
     	}
     };
+}).directive('settings', function() {
+	return {
+        restrict: 'E',
+        templateUrl: 'views/templates/settings.html',
+        scope: true,
+        link: linkFn
+    };
 })

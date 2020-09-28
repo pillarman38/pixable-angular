@@ -156,17 +156,17 @@ angular.module('caph.media', ['caph.ui', 'rx'], ['$provide', '$compileProvider',
 
                     this.togglePlay = function(index){
                     	$(".play-button").toggleClass("paused");
-                        console.log(isPlaying)
+                        console.log(isPlaying, $scope.isSearching)
                         if(isPlaying == false) {
                         	webapis.avplay.play();
-                        	
                         	isPlaying = true
                         	$scope.toggleIsPlaying(isPlaying)
+                        	$scope.getVideo("play")
                         } else {
                         	webapis.avplay.pause()
-                        	
                         	isPlaying = false
                         	$scope.toggleIsPlaying(isPlaying)
+                        	$scope.getVideo("play")
                         }
                     };
                     this.restart = function(index){
@@ -186,13 +186,8 @@ angular.module('caph.media', ['caph.ui', 'rx'], ['$provide', '$compileProvider',
                     	$scope.getVideo("forward")
                     };
                     this.next = function(index){
-                        if (angular.isNumber(index)) {
-                            setProperty(media, index, 'currentTime', media[index].duration);
-                        } else {
-                            media.each(function(i) {
-                                setProperty(media, i, 'currentTime', media[i].duration);
-                            });
-                        }
+                    	console.log($scope['$parent'])
+                    	$scope.getVideo("next")
                     };
 
                     ['autoplay', 'controls', 'currentTime', 'loop', 'mediaGroup', 'muted', 'playbackRate', 'preload', 'src', 'volume'].forEach(function(property) {

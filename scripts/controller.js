@@ -12,14 +12,14 @@ console.log(angular)
         SETTING5: 6
     };
     var pid = 0
-    var vidItem = {}
+    $scope.vidItem = {}
     var time = 0
     var arg = 0
     var screen = {
     	width: window.screen.width,
     	height: window.screen.height
     }
-    var isSearching = true
+    $scope.isSearching = false
     var pid = 0
     var subtitle = 0
     var showSubSetting = true
@@ -47,8 +47,10 @@ console.log($scope)
     $scope.relatedPlaylist = $scope.dataCategory[1]
     $scope.selectedFolder = $scope.dataCategory[1]
     console.log($scope.dataCategory, items)
+    
     $document.on('ready', function(){
         $timeout(function(){
+        	console.log()
         	var request = $.ajax({
         	    url: "http://192.168.1.86:4012/api/mov/movies",
         	    type: 'POST',
@@ -264,11 +266,11 @@ console.log($scope)
     	
     }
     function timeBarUpdater(currentTime) {
-    	var n = currentTime;
+    	  var n = currentTime;
     	  var l = n.toString().length-3;
     	  var v = n/Math.pow(10, 3); 
-    	  time = v + vidItem['seekTime']
-    	  percentage = Math.abs((time / vidItem['duration']) * 100)
+    	  time = v + $scope.$scope.vidItem['seekTime']
+    	  percentage = Math.abs((time / $scope.$scope.vidItem['duration']) * 100)
     	  console.log(percentage)
     	  $scope.timer = percentage
 //    	  $scope.$apply();
@@ -276,52 +278,63 @@ console.log($scope)
     
     $scope.getVideo = function(mechanic) {
     	console.log("hi")
-    	delete vidItem['id']
-    	delete vidItem['photo_urls']
+    	delete $scope.$scope.vidItem['id']
+    	delete $scope.$scope.vidItem['photo_urls']
     	console.log(screen)
-    	vidItem['screenRes'] = `${screen['width']}x${screen['height']}`
-    
+    	$scope.$scope.vidItem['screenRes'] = `${screen['width']}x${screen['height']}`
     	console.log(mechanic)
     	switch(mechanic) {
-    		case "forward": vidItem['seekTime'] += 15
-    			timeBarUpdater(vidItem['seekTime'])
+    		case "forward": 
+    			$scope.$scope.vidItem['seekTime'] = $scope.$scope.vidItem['seekTime'] + 30
+    			$scope.isSearching = true
+    			console.log($scope.isSearching, $scope.$scope.vidItem)
+    			timeBarUpdater($scope.$scope.vidItem['seekTime'])
     			break;
-    		case "rewind": vidItem['seekTime'] -= 30
-    			timeBarUpdater(vidItem['seekTime'])
+    		case "rewind": 
+    			$scope.$scope.vidItem['seekTime'] = $scope.$scope.vidItem['seekTime'] - 30
+	    		$scope.isSearching = true
+				console.log($scope.isSearching, $scope.$scope.vidItem)
+    			timeBarUpdater($scope.$scope.vidItem['seekTime'])
     			break;
-    		case "next": vidItem['seekTime'] += 200
-    			timeBarUpdater(vidItem['seekTime'])
+    		case "next": 
+    			$scope.$scope.vidItem['seekTime'] = $scope.$scope.vidItem['seekTime'] + 200
+	    		$scope.isSearching = true
+				console.log($scope.isSearching, $scope.$scope.vidItem)
+    			timeBarUpdater($scope.$scope.vidItem['seekTime'])
     			break;
-    		case "previous": vidItem['seekTime'] -= 200
-    			timeBarUpdater(vidItem['seekTime'])
+    		case "previous": 
+    			$scope.$scope.vidItem['seekTime'] = $scope.$scope.vidItem['seekTime'] - 30
+	    		$scope.isSearching = true
+				console.log($scope.isSearching, $scope.$scope.vidItem)
+    			timeBarUpdater($scope.$scope.vidItem['seekTime'])
     			break;
     		case "play": 
-    			vidItem['seekTime'] = time
-    			console.log(isSearching, vidItem['seekTime'])
+    			$scope.$scope.vidItem['seekTime'] = time
+    			console.log($scope.isSearching, $scope.$scope.vidItem['seekTime'])
     			
-    			if(isSearching == false) {
+    			if($scope.isSearching == false) {
     				console.log("searching")
     			} 
-    			if(vidItem['seekTime'] < 0) {
-    				vidItem['seekTime'] = 0
-    				console.log(isSearching, vidItem['seekTime'])
+    			if($scope.$scope.vidItem['seekTime'] < 0) {
+    				$scope.vidItem['seekTime'] = 0
+    				console.log($scope.isSearching, $scope.vidItem['seekTime'])
     			}
     			
-    			if(isSearching == true) {
-    				isSearching = false
-    				console.log(vidItem['seekTime'])
-    			vidItem['hdrEnabled'] = "false"
-    			vidItem['subtitleSelect'] = subtitle
-    			vidItem['audioSelect'] = audio
-    			vidItem['pid'] = pid
-    			console.log(vidItem)
+    			if($scope.isSearching == true) {
+    				$scope.isSearching = false
+    				console.log($scope.vidItem['seekTime'])
+    			$scope.vidItem['hdrEnabled'] = "false"
+    			$scope.vidItem['subtitleSelect'] = subtitle
+    			$scope.vidItem['audioSelect'] = audio
+    			$scope.vidItem['pid'] = pid
+    			console.log($scope.vidItem)
     			fetch('http://192.168.1.86:4012/api/mov/pullVideo', {
     			    method: 'POST',
     			    headers: {
     			      'Accept': 'application/javascript',
     			      'Content-Type': 'application/json'
     			    },
-    			    body: JSON.stringify(vidItem)
+    			    body: JSON.stringify($scope.vidItem)
     			  }).then(function(res){ 
     				  return res.json() 
     			  }).then((data) => {
@@ -387,7 +400,6 @@ console.log($scope)
     					    console.log("DRM callback: " + drmEvent + ", data: " + drmData);
     					  }
     					};
-
     					
     					webapis.avplay.setListener(listener);
     					
@@ -417,6 +429,7 @@ console.log($scope)
     					webapis.avplay.prepareAsync(successCallback,errorCallback);
 
     					webapis.avplay.play();
+    					$scope.isSearching = false
     			  })
     		break;
     		}
@@ -492,6 +505,7 @@ console.log($scope)
     };
 
     $scope.selectPlayButton = function(){
+    	$scope.isSearching = true
         changeDepth($scope.DEPTH.PLAYER);
         $scope.getVideo("play")
     };
@@ -586,7 +600,7 @@ console.log($scope)
     function updateOverview() {
     	console.log(currentItemData)
         $scope.overview = currentItemData;
-        vidItem = $scope.overview
+        $scope.vidItem = $scope.overview
         $scope.isOverviewDark = false;
     }
 
